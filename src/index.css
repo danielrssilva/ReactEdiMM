@@ -1,0 +1,22 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    font-family: "Josefin Sans", sans-serif;
+    font-weight: 100;
+}
+.rhap_time {
+    color: white;
+}
+.twitter-picker {
+    display: flex;
+    position: fixed !important;
+    padding: 10px;
+    background: #262626;
+    color: white;
+    flex-direction: column;
+    justify-content: space-between;
+    align-content: center;
+    z-index: 10000;
+    transition: 0.2s all;
+    padding: 0;
+}
