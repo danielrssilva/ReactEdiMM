@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const DropDownDiv = styled.div`
+export const Menu = styled.div`
   display: flex;
   position: fixed;
   background: #262626;
