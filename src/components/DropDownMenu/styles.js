@@ -13,6 +13,8 @@ export const DropDownDiv = styled.div`
   padding: 0;
   border-radius: 5px;
   font-weight: bold;
+  max-height: 300px;
+  overflow: auto;
   > div {
     padding: 1rem;
     cursor: pointer;

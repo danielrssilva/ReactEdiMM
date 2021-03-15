@@ -13,7 +13,8 @@ import {
   Drop,
 } from "../../props/svg-lib";
 
-import fonts from "../../props/fonts";
+import fonts, { sizes } from "../../props/fonts";
+import colors from "../../props/colors";
 
 import { TwitterPicker } from "react-color";
 import HeaderButton from "../HeaderButton";
@@ -34,13 +35,11 @@ const AppHeader = ({
   setItalic,
   handlePrint,
 }) => {
-  const [renderDropDown, setRenderDropDown] = useState(false);
   const [renderDropDownFontSize, setRenderDropDownFontSize] = useState(false);
+  const [renderDropDownLine, setRenderDropDownLine] = useState(false);
   const [renderDropDownFont, setRenderDropDownFont] = useState(false);
   const [renderColorPicker, setRenderColorPicker] = useState(false);
-  const toggleColorPicker = () => {
-    setRenderColorPicker(!renderColorPicker);
-  };
+  const [renderOptions, setRenderOptions] = useState(false);
   const renderLineSpan = () => {
     let lines = [];
     for (let i = 1; i <= 10; i++) {
@@ -55,45 +54,40 @@ const AppHeader = ({
     }
     return lines;
   };
-
-  const renderFontSize = () => {
-    let sizes = [];
-    for (let i = 10; i <= 50; i += 2) {
-      sizes.push(
-        <p
-          onClick={() => handleFontSizeChange(i)}
-          title={`Tamanho da fonte: ${i}px`}
-        >
-          {i}
-        </p>
-      );
-    }
-    return sizes;
-  };
-  const renderFontFamily = () => {
-    return fonts.map((font) => {
-      return (
-        <p style={{ fontFamily: font }} onClick={() => handleFontChange(font)}>
-          {font}
-        </p>
-      );
-    });
-  };
-  const toggleDropdown = () => {
-    setRenderDropDown(!renderDropDown);
+  const toggleDropdownLine = () => {
+    setRenderDropDownLine(!renderDropDownLine);
+    setRenderDropDownFont(false);
+    setRenderDropDownFontSize(false);
+    setRenderColorPicker(false);
   };
 
   const toggleDropdownFontSize = () => {
     setRenderDropDownFontSize(!renderDropDownFontSize);
+    setRenderDropDownLine(false);
+    setRenderDropDownFont(false);
+    setRenderColorPicker(false);
   };
 
   const toggleDropdownFont = () => {
     setRenderDropDownFont(!renderDropDownFont);
+    setRenderDropDownLine(false);
+    setRenderDropDownFontSize(false);
+    setRenderColorPicker(false);
+  };
+
+  const toggleColorPicker = () => {
+    setRenderColorPicker(!renderColorPicker);
+    setRenderDropDownFont(false);
+    setRenderDropDownLine(false);
+    setRenderDropDownFontSize(false);
   };
 
   const handleColorChange = (color) => {
     setColor(color.hex);
     setRenderColorPicker(!renderColorPicker);
+    setRenderDropDownLine(false);
+    setRenderDropDownFont(false);
+    setRenderDropDownFontSize(false);
   };
 
   const handleFontChange = (font) => {
@@ -108,7 +102,7 @@ const AppHeader = ({
 
   const handleBrushRadiusChange = (size) => {
     setBrushRadius(size);
-    toggleDropdown();
+    toggleDropdownLine();
   };
 
   const toggleBold = () => {
@@ -124,49 +118,64 @@ const AppHeader = ({
   return (
     <>
       <Header color={color}>
-        <div>
-          <HeaderButton active={bold} onClickFunction={toggleBold}>
-            <Bold />
-          </HeaderButton>
-          <HeaderButton active={underlined} onClickFunction={toggleUnderlined}>
-            <Underline />
-          </HeaderButton>
-          <HeaderButton active={italic} onClickFunction={toggleItalic}>
-            <Italic />
-          </HeaderButton>
-          <div>
-            <HeaderButton
-              onClickFunction={toggleDropdownFont}
-              hasDropDown
-              dropDownActive={renderDropDownFont}
-            >
-              <span style={{ fontFamily: font }}>{font}</span>
+        <div
+          style={{
+            flexWrap: "wrap",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+            }}
+          >
+            <HeaderButton active={bold} onClickFunction={toggleBold}>
+              <Bold />
             </HeaderButton>
-            {renderDropDownFont && (
-              <DropDownMenu>{renderFontFamily()}</DropDownMenu>
-            )}
+            <HeaderButton
+              active={underlined}
+              onClickFunction={toggleUnderlined}
+            >
+              <Underline />
+            </HeaderButton>
+            <HeaderButton active={italic} onClickFunction={toggleItalic}>
+              <Italic />
+            </HeaderButton>
+            <div>
+              <HeaderButton
+                onClickFunction={toggleDropdownFont}
+                hasDropDown
+                dropDownActive={renderDropDownFont}
+              >
+                <span style={{ fontFamily: font }}>{font}</span>
+              </HeaderButton>
+              {renderDropDownFont && (
+                <DropDownMenu>{fonts(handleFontChange)}</DropDownMenu>
+              )}
+            </div>
+            <div>
+              <HeaderButton
+                onClickFunction={toggleDropdownFontSize}
+                hasDropDown
+                dropDownActive={renderDropDownFontSize}
+              >
+                <span>{fontSize}</span>
+              </HeaderButton>
+              {renderDropDownFontSize && (
+                <DropDownMenu>{sizes(handleFontSizeChange)}</DropDownMenu>
+              )}
+            </div>
           </div>
           <div>
             <HeaderButton
-              onClickFunction={toggleDropdownFontSize}
+              onClickFunction={toggleDropdownLine}
               hasDropDown
-              dropDownActive={renderDropDownFontSize}
-            >
-              <span>{fontSize}</span>
-            </HeaderButton>
-            {renderDropDownFontSize && (
-              <DropDownMenu>{renderFontSize()}</DropDownMenu>
-            )}
-          </div>
-          <div>
-            <HeaderButton
-              onClickFunction={toggleDropdown}
-              hasDropDown
-              dropDownActive={renderDropDown}
+              dropDownActive={renderDropDownLine}
             >
               <LineWeight />
             </HeaderButton>
-            {renderDropDown && <DropDownMenu>{renderLineSpan()}</DropDownMenu>}
+            {renderDropDownLine && (
+              <DropDownMenu>{renderLineSpan()}</DropDownMenu>
+            )}
           </div>
           <div>
             <HeaderButton onClickFunction={toggleColorPicker}>
@@ -182,18 +191,31 @@ const AppHeader = ({
               />
             </HeaderButton>
             {renderColorPicker && (
-              <TwitterPicker onChangeComplete={handleColorChange} />
+              <TwitterPicker
+                onChangeComplete={handleColorChange}
+                colors={colors}
+              />
             )}
           </div>
           <HeaderButton color={color} height={brushRadius + 5}></HeaderButton>
         </div>
         <FixedButtons>
-          <HeaderButton hasDropDown onClick={() => handlePrint()}>
+          <HeaderButton hasDropDown onClickFunction={() => handlePrint()}>
             <Save />
           </HeaderButton>
-          <HeaderButton hasDropDown>
-            <Options />
-          </HeaderButton>
+          <div>
+            <HeaderButton
+              hasDropDown
+              onClickFunction={() => setRenderOptions(!renderOptions)}
+            >
+              <Options />
+            </HeaderButton>
+            {renderOptions && (
+              <DropDownMenu>
+                <p>Opções</p>
+              </DropDownMenu>
+            )}
+          </div>
           <HeaderButton>
             <Mobile />
           </HeaderButton>

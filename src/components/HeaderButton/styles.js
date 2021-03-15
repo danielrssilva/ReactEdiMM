@@ -34,19 +34,10 @@ export const Button = styled.button`
     transition: transform 0.2s;
   }
   &.active {
-    &::after {
-      content: "";
-      display: flex;
-      border-top: none;
-      align-self: flex-start;
-      justify-self: flex-end;
-
-      border-radius: 50px;
-      border: 5px solid #028128;
-      margin-right: -15px;
-      margin-left: 5px;
-
-      background: #028128;
+    border-color: #028128;
+    background: #b4dabf;
+    &:hover {
+      background: #dbf0e1;
     }
   }
   > span {

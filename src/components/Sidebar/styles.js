@@ -13,41 +13,55 @@ import { Audiotrack } from "@styled-icons/material-rounded/Audiotrack";
 import { FileEarmarkArrowUpFill } from "@styled-icons/bootstrap/FileEarmarkArrowUpFill";
 
 export const SidebarContainer = styled.ul`
-    bottom: 20%;
-    padding: 0;
-    z-index: 1000;
-    display: flex;
-    position: absolute;
-    flex-direction: column;
-    align-self: center;
-    flex-wrap: wrap;
-    align-content: flex-start;
+  bottom: 20%;
+  padding: 0;
+  z-index: 1000;
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  align-self: center;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  @media (max-height: 760px) {
+    bottom: 0;
+    flex-direction: row;
+    margin-bottom: 0;
+  }
+  /* @media (max-height: 675px) {
+    bottom: 5%;
+  }
+  @media (max-height: 640px) {
+    bottom: 2.5%;
+  } */
 `;
 
 export const UndoRedoDiv = styled.div`
-    margin-top: 4px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  margin-top: 4px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  @media (max-height: 760px) {
+    display: none;
+  }
 `;
 export const UndoRedoButton = styled.button`
-    background: #262626;
-    height: 28px;
-    width: 28px;
-    border: none;
-    padding: 2px;
+  background: #262626;
+  height: 28px;
+  width: 28px;
+  border: none;
+  padding: 2px;
+  transition: 0.3s all;
+  z-index: 2100;
+  border: 0 solid #262626;
+  svg {
+    width: 20px;
+    color: white;
+  }
+  :hover {
+    cursor: pointer;
+    border: 2px solid white;
     transition: 0.3s all;
-    z-index: 2100;
-    border: 0 solid #262626;
-    svg {
-        width: 20px;
-        color: white;
-    }
-    :hover {
-        cursor: pointer;
-        border: 2px solid white;
-        transition: 0.3s all;
-    }
+  }
 `;
 
 export const RedoIcon = Redo;

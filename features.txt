@@ -1,0 +1,2 @@
+adicionar funcionalidade de customizar tamanho de fonte
+adicionar funcionalidade de fonte personalizada

@@ -8,12 +8,12 @@ export const Container = styled.div`
   z-index: 1000;
 `;
 
-export const HeaderButton = styled.button`
+export const Button = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
 
-  background: white;
+  background: red;
 
   width: 30px;
   height: 30px;
@@ -25,7 +25,7 @@ export const HeaderButton = styled.button`
   font-weight: bold;
   box-sizing: border-box;
   &:hover {
-    background: #a1a1a1;
+    background: #ab2222;
     cursor: pointer;
   }
   > span {
@@ -33,7 +33,7 @@ export const HeaderButton = styled.button`
     margin-right: 0.2rem;
   }
   > svg {
-    color: #000;
+    color: #fff;
     align-self: center;
     flex-grow: 2;
     flex-basis: auto;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AppHeader from "../src/components/header/index";
 import Sidebar from "./components/Sidebar/index";
 import CanvasDraw from "react-canvas-draw";
@@ -9,10 +9,15 @@ import Text from "./components/Text";
 import "react-h5-audio-player/lib/styles.css";
 import StyledAudioPlayer from "./components/StyledAudioPlayer";
 import ComponentDeleteButton from "./components/ComponentDeleteButton";
+import GeoShape from "./components/GeoShape";
 import "react-h5-audio-player/lib/styles.css";
+import { LineWeight } from "./props/svg-lib";
 
 const App = () => {
+  const [, updateState] = React.useState();
+  const forceUpdate = React.useCallback(() => updateState({}), []);
   const [selectedFunction, setSelectedFunction] = useState("draw");
+  const [shouldDelete, setShouldDelete] = useState(false);
   const [color, setColor] = useState("#000000");
   const [font, setFont] = useState("Arial");
 
@@ -31,16 +36,44 @@ const App = () => {
     const newCanvasContent = canvasContent;
     newCanvasContent.pop();
     setCanvasContent(newCanvasContent);
+    forceUpdate();
   };
-  const handleDelete = (element) => {
-    console.log(element);
+  const handleDelete = (x, y) => {
+    let newCanvasContent = canvasContent;
+    newCanvasContent.forEach((content, index) => {
+      if (content.key === `${x}${y}`) {
+        newCanvasContent.splice(index, 1);
+      }
+    });
+    setCanvasContent(newCanvasContent);
+    forceUpdate();
+  };
+
+  useEffect(() => {
+    if (selectedFunction === "erase") {
+      setShouldDelete(true);
+    } else setShouldDelete(false);
+  }, [selectedFunction]);
+
+  const newHandleDelete = (x, y, bool) => {
+    if (shouldDelete) {
+      let newCanvasContent = canvasContent;
+      newCanvasContent.forEach(({ key }, index) => {
+        if (key === `${x}${y + 60}`) {
+          newCanvasContent.splice(index, 1);
+        }
+      });
+      setCanvasContent(newCanvasContent);
+    }
   };
   const handleClick = () => {
     const newCanvasContent = canvasContent;
+    if (selectedFunction === "erase") {
+    }
     if (selectedFunction === "textArea" || selectedFunction === "text") {
       setSelectedFunction("");
       newCanvasContent.push(
-        <div key={`textAt-${x}-${y}`}>
+        <div key={`${x}${y}`}>
           <Text
             x={x}
             y={y}
@@ -52,10 +85,34 @@ const App = () => {
             underlined={underlined}
             isTextArea={selectedFunction === "textArea" ? true : false}
             className={newCanvasContent.length + 1}
+            handleDelete={handleDelete}
           />
         </div>
       );
       setCanvasContent(newCanvasContent);
+    }
+    if (selectedFunction === "shapes") {
+      setSelectedFunction("");
+      newCanvasContent.push(
+        <div key={`${x}${y}`}>
+          <ComponentDeleteButton
+            x={x}
+            y={y - 60}
+            color={color}
+            handleDelete={handleDelete}
+          />
+          <GeoShape
+            color={color}
+            both={false}
+            x={x}
+            y={y - 60}
+            fill={false}
+            size={brushRadius}
+          />
+        </div>
+      );
+      setCanvasContent(newCanvasContent);
+      setFile(null);
     }
     if (selectedFunction === "audio" && file) {
       setSelectedFunction("");
@@ -66,10 +123,11 @@ const App = () => {
           y={y - 60}
           file={file}
           fileName={fileName}
-          key={"x:" + x + "-y:" + y + "file:" + fileName}
-          id={"x:" + x + "-y:" + y + "file:" + fileName}
+          key={`${x}${y}`}
+          id={`${x}${y}`}
           handleDelete={handleDelete}
-          shouldDelete={selectedFunction}
+          newHandleDelete={newHandleDelete}
+          shouldDelete={shouldDelete}
         />
       );
       setCanvasContent(newCanvasContent);
@@ -78,21 +136,32 @@ const App = () => {
     if (selectedFunction === "image" && file) {
       setSelectedFunction("");
       newCanvasContent.push(
-        <>
-          <ComponentDeleteButton x={x} y={y - 60} color={color} />
-          <img
+        <div key={`${x}${y}`}>
+          <ComponentDeleteButton
+            x={x}
+            y={y - 60}
+            color={color}
+            handleDelete={handleDelete}
+          />
+          <div
             style={{
               position: "absolute",
               top: y - 60,
               left: x,
-              maxWidth: "800px",
+              maxWidth: "80vh",
+              resize: "both",
+              overflow: "hidden",
+              zIndex: "1000",
             }}
-            src={file ? file : ""}
-            key={file ? file : ""}
-            onDoubleClick={(e) => console.log(e.target)}
-            alt={fileName}
-          />
-        </>
+          >
+            <img
+              src={file ? file : ""}
+              key={`${x}${y}`}
+              alt={fileName}
+              style={{ width: "100%" }}
+            />
+          </div>
+        </div>
       );
       setCanvasContent(newCanvasContent);
       setFile(null);
@@ -100,28 +169,35 @@ const App = () => {
     if (selectedFunction === "video" && file) {
       setSelectedFunction("");
       newCanvasContent.push(
-        <>
-          <ComponentDeleteButton x={x} y={y - 60} color={color} />
+        <div key={`${x}${y}`}>
+          <ComponentDeleteButton
+            x={x}
+            y={y - 60}
+            color={color}
+            handleDelete={handleDelete}
+          />
           <video
             style={{
               position: "absolute",
               top: y - 60,
               left: x,
-              maxWidth: "800px",
+              maxWidth: "60vh",
+              maxHeight: "60vh",
               zIndex: 99,
             }}
             src={file ? file : ""}
             key={file ? file : ""}
-            onDoubleClick={(e) => console.log(e.target)}
             autoPlay
             loop
             controls
           />
-        </>
+        </div>
       );
       setCanvasContent(newCanvasContent);
       setFile(null);
     }
+    if (selectedFunction === "erase") setShouldDelete(true);
+    else setShouldDelete(false);
   };
 
   const handlePrint = () => {
@@ -129,8 +205,7 @@ const App = () => {
   };
 
   return (
-    <div onClick={() => handleClick()}>
-      <FileCanvas>{canvasContent}</FileCanvas>
+    <>
       <AppHeader
         brushRadius={brushRadius}
         setBrushRadius={setBrushRadius}
@@ -148,6 +223,24 @@ const App = () => {
         setItalic={setItalic}
         handlePrint={handlePrint}
       />
+      <div onClick={() => handleClick()}>
+        <FileCanvas>{canvasContent}</FileCanvas>
+        <CanvasDraw
+          brushColor={color}
+          brushRadius={brushRadius}
+          disabled={selectedFunction === "draw" ? false : true}
+          lazyRadius={0}
+          style={{
+            postion: "fixed",
+            width: "100vw",
+            height: "100vh",
+            top: "0",
+            background: "#ffffffff",
+          }}
+          hideGrid
+        />
+      </div>
+      {/* <GeoShape color={color} both={false} x={x} y={y} fill={false} /> */}
       <Sidebar
         selectedFunction={selectedFunction}
         setSelectedFunction={setSelectedFunction}
@@ -155,21 +248,7 @@ const App = () => {
         setFileName={setFileName}
         undo={undo}
       />
-      <CanvasDraw
-        brushColor={color}
-        brushRadius={brushRadius}
-        disabled={selectedFunction === "draw" ? false : true}
-        lazyRadius={0}
-        style={{
-          postion: "fixed",
-          width: "100vw",
-          height: "100vh",
-          top: "0",
-          background: "#ffffffff",
-        }}
-        hideGrid
-      />
-    </div>
+    </>
   );
 };
 

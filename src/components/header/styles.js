@@ -4,7 +4,7 @@ import { Droplet } from "@styled-icons/boxicons-solid/Droplet";
 export const Header = styled.div`
   top: 0;
   position: fixed;
-  height: 4rem;
+  min-height: 4rem;
   z-index: 100;
   width: 100vw;
   color: white;
@@ -92,15 +92,6 @@ export const HeaderButton = styled.button`
   > span {
     padding: 0.3rem 0;
     margin-right: 0.2rem;
-  }
-
-  > div {
-    width: 12px;
-    height: 12px;
-    border-radius: 0 15px 15px 15px;
-    border: 1px solid black;
-    transform: rotate(45deg);
-    background: ${(props) => (props.color ? props.color : "black")};
   }
 
   background: ${(props) => (props.color ? props.color : "")};

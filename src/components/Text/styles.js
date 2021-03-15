@@ -6,23 +6,25 @@ import { ArrowsMove } from "@styled-icons/bootstrap/ArrowsMove";
 export const WrittableContent = styled.div`
   padding: 0.5rem;
   min-width: 140px;
+  max-width: unset;
   min-height: 15px;
   position: absolute;
-  z-index: 99;
   left: 30px;
-  font-size: ${(props) => `${props.size}px`};
-  font-family: ${(props) => `${props.font}`};
-  color: ${(props) => `${props.color}`};
-  resize: horizontal;
-  ${(props) =>
-    props.isTextArea &&
-    `resize: both;
-        overflow: auto;
-        border: 2px solid ${props.color};
-        background: ${props.color};
-        color: white;
-        border-radius: 5px;`}
+  font-size: ${({ size }) => `${size}px`};
+  font-family: ${({ font }) => `${font}`};
+  color: ${({ color }) => `${color}`};
+
   text-transform: ${({ isTextArea }) => !isTextArea && "uppercase"};
+  white-space: ${({ isTextArea }) => !isTextArea && "nowrap"};
+
+  resize: ${({ isTextArea }) => isTextArea && "both"};
+  overflow: ${({ isTextArea }) => isTextArea && "auto"};
+  border: ${({ isTextArea, color }) => isTextArea && `2px solid ${color}`};
+  border-radius: ${({ isTextArea }) => isTextArea && "5px"};
+  background: ${({ isTextArea, color }) => isTextArea && `${color}22`};
+  box-shadow: ${({ isTextArea, color }) =>
+    isTextArea && color && `0 0 3px 0 ${color}66`};
+
   background: ${({ color }) => color === "#ffffff" && "#000"};
   font-weight: ${({ bold }) => bold && "bold"};
   text-decoration: ${({ underlined }) => underlined && "underline"};
@@ -34,7 +36,7 @@ export const Menu = styled.div`
   justify-content: space-between;
   flex-direction: column;
   position: absolute;
-  z-index: 99;
+  z-index: 100;
   top: -50px;
   > div {
     display: flex;
@@ -106,9 +108,9 @@ export const HeaderButton = styled.button`
 export const Content = styled.div`
   display: flex;
   position: absolute;
-  z-index: 99;
-  top: ${({ y }) => `calc(${y - 60}px - 4rem)`};
-  left: ${({ x }) => `${x - 2}px`};
+  z-index: 100;
+  top: ${({ y }) => `calc(${y}px - 4rem)`};
+  left: ${({ x }) => `${x + 2}px`};
 `;
 
 export const MenuIcon = DotsVerticalRounded;

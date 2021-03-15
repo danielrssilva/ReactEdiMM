@@ -3,6 +3,8 @@ body {
   overflow: hidden;
   font-family: "Josefin Sans", sans-serif;
   font-weight: 100;
+  width: 100vw;
+  height: 100vh;
 }
 .rhap_time {
   color: white;
@@ -21,4 +23,18 @@ body {
   padding: 0;
   margin-top: 10px;
   margin-left: 11px;
+}
+
+::-webkit-scrollbar {
+  background-color: #babac0;
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background-color: #babac0;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #4e4e4e;
+}
+::-webkit-scrollbar-button {
+  display:none;
 }

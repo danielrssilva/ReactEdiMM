@@ -1,16 +1,15 @@
 import React from "react";
-import { Container, HeaderButton, Delete } from "./styles";
+import { Container, Button, Delete } from "./styles";
 
 const ComponentDeleteButton = ({ y, x, color, handleDelete }) => {
   return (
     <Container x={x} y={y}>
-      <HeaderButton
-        // onClick={() => handleDelete()}
-        // style={{ background: "none", color: "red", border: "none" }}
+      <Button
+        onClick={() => handleDelete(x, y + 60)}
         color={color}
       >
         <Delete />
-      </HeaderButton>
+      </Button>
     </Container>
   );
 };
