@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import AppHeader from "../src/components/header/index";
 import Sidebar from "./components/Sidebar/index";
 import CanvasDraw from "react-canvas-draw";
-// import Canvas from "./components/Canvas/index.jsx";
 import GetMousePosition from "./components/MouseChecker";
 import FileCanvas from "./components/FileCanvas";
 import Text from "./components/Text";
@@ -11,13 +10,11 @@ import StyledAudioPlayer from "./components/StyledAudioPlayer";
 import ComponentDeleteButton from "./components/ComponentDeleteButton";
 import GeoShape from "./components/GeoShape";
 import "react-h5-audio-player/lib/styles.css";
-import { LineWeight } from "./props/svg-lib";
 
 const App = () => {
   const [, updateState] = React.useState();
   const forceUpdate = React.useCallback(() => updateState({}), []);
   const [selectedFunction, setSelectedFunction] = useState("draw");
-  const [shouldDelete, setShouldDelete] = useState(false);
   const [color, setColor] = useState("#000000");
   const [font, setFont] = useState("Arial");
 
@@ -49,27 +46,8 @@ const App = () => {
     forceUpdate();
   };
 
-  useEffect(() => {
-    if (selectedFunction === "erase") {
-      setShouldDelete(true);
-    } else setShouldDelete(false);
-  }, [selectedFunction]);
-
-  const newHandleDelete = (x, y, bool) => {
-    if (shouldDelete) {
-      let newCanvasContent = canvasContent;
-      newCanvasContent.forEach(({ key }, index) => {
-        if (key === `${x}${y + 60}`) {
-          newCanvasContent.splice(index, 1);
-        }
-      });
-      setCanvasContent(newCanvasContent);
-    }
-  };
   const handleClick = () => {
     const newCanvasContent = canvasContent;
-    if (selectedFunction === "erase") {
-    }
     if (selectedFunction === "textArea" || selectedFunction === "text") {
       setSelectedFunction("");
       newCanvasContent.push(
@@ -84,7 +62,7 @@ const App = () => {
             bold={bold}
             underlined={underlined}
             isTextArea={selectedFunction === "textArea" ? true : false}
-            className={newCanvasContent.length + 1}
+            className={`text-${newCanvasContent.length + 1}`}
             handleDelete={handleDelete}
           />
         </div>
@@ -126,8 +104,6 @@ const App = () => {
           key={`${x}${y}`}
           id={`${x}${y}`}
           handleDelete={handleDelete}
-          newHandleDelete={newHandleDelete}
-          shouldDelete={shouldDelete}
         />
       );
       setCanvasContent(newCanvasContent);
@@ -151,7 +127,7 @@ const App = () => {
               maxWidth: "80vh",
               resize: "both",
               overflow: "hidden",
-              zIndex: "1000",
+              zIndex: "1",
             }}
           >
             <img
@@ -196,8 +172,6 @@ const App = () => {
       setCanvasContent(newCanvasContent);
       setFile(null);
     }
-    if (selectedFunction === "erase") setShouldDelete(true);
-    else setShouldDelete(false);
   };
 
   const handlePrint = () => {
@@ -240,7 +214,6 @@ const App = () => {
           hideGrid
         />
       </div>
-      {/* <GeoShape color={color} both={false} x={x} y={y} fill={false} /> */}
       <Sidebar
         selectedFunction={selectedFunction}
         setSelectedFunction={setSelectedFunction}

@@ -4,6 +4,7 @@ import { Bold, Underline, Italic } from "../../props/svg-lib";
 import DropDownMenu from "../DropDownMenu";
 import fonts from "../../props/fonts";
 import { TwitterPicker } from "react-color";
+// import { colors } from "../../props/colors"
 
 const TextMenu = ({
   x,

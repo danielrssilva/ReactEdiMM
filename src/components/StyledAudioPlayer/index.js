@@ -10,11 +10,9 @@ const StyledAudioPlayer = ({
   fileName,
   color,
   handleDelete,
-  newHandleDelete,
-  shouldDelete,
 }) => {
   return (
-    <div onClick={() => newHandleDelete(x, y, shouldDelete)}>
+    <div>
       <ComponentDeleteButton
         x={x}
         y={y}

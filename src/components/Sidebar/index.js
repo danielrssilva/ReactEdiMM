@@ -81,13 +81,13 @@ const Sidebar = ({
         <FileInput
           setFile={setFile}
           color="#770888"
-          isSelected={
-            selectedFunction === "video" ||
-            selectedFunction === "audio" ||
-            selectedFunction === "image"
-              ? true
-              : false
-          }
+          // isSelected={
+          //   selectedFunction === "video" ||
+          //   selectedFunction === "audio" ||
+          //   selectedFunction === "image"
+          //     ? true
+          //     : false
+          // }
           setSelectedFunction={setSelectedFunction}
           setFileName={setFileName}
         >
